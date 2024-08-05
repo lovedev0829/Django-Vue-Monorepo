@@ -1,20 +1,35 @@
-# frontend
+# vue
 
-## Build Setup
+This template should help get you started developing with Vue 3 in Vite.
 
-```bash
-# install dependencies
-$ npm install
+## Recommended IDE Setup
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+[VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+## Type Support for `.vue` Imports in TS
 
-# generate static project
-$ npm run generate
+Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.
+
+However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VS Code command palette.
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
+npm install
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
