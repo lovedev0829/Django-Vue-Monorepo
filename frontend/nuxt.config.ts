@@ -1,125 +1,48 @@
-import svgLoader from 'vite-svg-loader'
-import vuetify from 'vite-plugin-vuetify'
-import { fileURLToPath } from 'node:url'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import path from 'path';
 export default defineNuxtConfig({
-  app: {
-    head: {
-      titleTemplate: '%s - NuxtJS Admin Template',
-      title: 'Materio',
+  devtools: { enabled: true },
+  modules: ['nuxt-primevue', '@nuxtjs/i18n', '@pinia/nuxt'],
 
-      link: [{
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico',
-      }],
-    },
-  },
+  components: [
+      {
+          path: '~/components',
+          pathPrefix: false
+      }
+  ],
 
-  devtools: {
-    enabled: true,
+  primevue: {
+      options: {
+          unstyled: true
+      },
+      importPT: { as: 'Lara', from: '~/presets/lara' }  },
+
+  imports: {
+      dirs: ["./locales"],
   },
 
   css: [
-    '@core/scss/template/index.scss',
-    '@styles/styles.scss',
-    '@/plugins/iconify/icons.css',
-    '@layouts/styles/index.scss',
+      '@/assets/styles/style.css',
+      '/node_modules/primeicons/primeicons.css',
+      '@/assets/styles/layout/layout.scss'
   ],
 
-  components: {
-    dirs: [{
-      path: '@/@core/components',
-      pathPrefix: false,
-    }, {
-      path: '~/components/global',
-      global: true,
-    }, {
-      path: '~/components',
-      pathPrefix: false,
-    }],
+  postcss: {
+      plugins: {
+          tailwindcss: {},
+          autoprefixer: {}
+      }
   },
 
-  plugins: ['@/plugins/vuetify/index.js', '@/plugins/iconify/index.js'],
-
-  imports: {
-    dirs: ['./@core/utils', './@core/composable/', './plugins/*/composables/*'],
+  runtimeConfig: {
+      public: {
+          API_BASE_URL: process.env.NODE_ENV === "development" ? 'http://localhost:3000/' : process.env.API_BASE_URL,
+      }
   },
 
-  hooks: {},
-
-  experimental: {
-    typedPages: true,
+  i18n: {
+      vueI18n: './i18n.config.ts'
   },
 
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        paths: {
-          '@/*': ['../*'],
-          '@layouts/*': ['../@layouts/*'],
-          '@layouts': ['../@layouts'],
-          '@core/*': ['../@core/*'],
-          '@core': ['../@core'],
-          '@images/*': ['../assets/images/*'],
-          '@styles/*': ['../styles/*'],
-        },
-      },
-    },
-  },
-
-  // ℹ️ Disable source maps until this is resolved: https://github.com/vuetifyjs/vuetify-loader/issues/290
-  sourcemap: {
-    server: false,
-    client: false,
-  },
-
-  vue: {
-    compilerOptions: {
-      isCustomElement: tag => tag === 'swiper-container' || tag === 'swiper-slide',
-    },
-  },
-
-  vite: {
-    define: { 'process.env': {} },
-
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('.', import.meta.url)),
-        '@core': fileURLToPath(new URL('./@core', import.meta.url)),
-        '@layouts': fileURLToPath(new URL('./@layouts', import.meta.url)),
-        '@images': fileURLToPath(new URL('./assets/images/', import.meta.url)),
-        '@styles': fileURLToPath(new URL('./assets/styles/', import.meta.url)),
-        '@configured-variables': fileURLToPath(new URL('./assets/styles/variables/_template.scss', import.meta.url)),
-      },
-    },
-
-    build: {
-      chunkSizeWarningLimit: 5000,
-    },
-
-    optimizeDeps: {
-      exclude: ['vuetify'],
-      entries: [
-        './**/*.vue',
-      ],
-    },
-
-    plugins: [
-      svgLoader(),
-      vuetify({
-        styles: {
-          configFile: 'assets/styles/variables/_vuetify.scss',
-        },
-      }),
-    ],
-  },
-
-  build: {
-    transpile: ['vuetify'],
-  },
-
-  modules: ['@vueuse/nuxt', '@nuxtjs/device', '@pinia/nuxt'],
-  compatibilityDate: '2024-08-05',
-})
+  compatibilityDate: '2024-08-06',
+});

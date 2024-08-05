@@ -1,35 +1,38 @@
-# vue
+# nuxt3-primevue-tailwind-starterkit-template
+**This is a starter project for building modern web applications. It includes everything you need to get started, including:
 
-This template should help get you started developing with Vue 3 in Vite.
+Nuxt 3: A Vue.js framework that makes it easy to develop server-side rendered, static, and hybrid applications.
+PrimeVue: A Vue UI component library that provides a wide range of components for building complex user interfaces.
+Tailwind: A utility-first CSS framework that gives you complete control over the look and feel of your application.
+ESLint: A linter that helps you identify and fix potential errors in your code.
+Husky: A git hook manager that helps you automate tasks such as linting and testing your code before committing it.
+To get started:
 
-## Recommended IDE Setup
+Install the dependencies: yarn install
+Start the development server: yarn dev
+Your application will be available at http://localhost:3000 by default.
 
-[VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.
-
-However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VS Code command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+Features:
+- primevue theme config
+- login interceptor
+- prettier - eslint for coding convention
+- axios for handle api
+- primevue x tailwind css can custome theme variable
+- i18 for multiple language
+- typescript  
+Nuxt 3:
+Server-side rendering
+Automatic routing
+PrimeVue:
+Over 80 Vue UI components
+A variety of themes and templates
+Easy to use and customize
+Tailwind CSS:
+Utility-first CSS framework
+Complete control over the look and feel of your application
+ESLint:
+Linting rules for Vue.js, JavaScript, and HTML
+Helps you identify and fix potential errors in your code
+Husky:
+Git hook manager
+Automates tasks such as linting and testing your code before committing it
