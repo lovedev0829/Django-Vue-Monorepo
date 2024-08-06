@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import path from 'path';
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['nuxt-primevue', '@nuxtjs/i18n', '@pinia/nuxt'],
@@ -36,13 +35,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
       public: {
-          API_BASE_URL: process.env.NODE_ENV === "development" ? 'http://localhost:3000/' : process.env.API_BASE_URL,
+          API_BASE_URL: process.env.NODE_ENV === "development" ? 'http://192.168.147.193:8000/api/v1' : process.env.API_BASE_URL,
       }
   },
 
   i18n: {
       vueI18n: './i18n.config.ts'
   },
-
-  compatibilityDate: '2024-08-06',
 });

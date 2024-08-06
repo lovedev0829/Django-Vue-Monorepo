@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
 
 export const useAxiosInstance = () => {
 	const config = useRuntimeConfig();
@@ -6,6 +7,7 @@ export const useAxiosInstance = () => {
 	const accessToken = useCookie('access_token');
 	const { API_BASE_URL } = config.public
 	const toast = useToast();
+	
 	console.log('NUXT_API_BASE', API_BASE_URL)
 	const axiosClient = axios.create({
 
@@ -14,7 +16,7 @@ export const useAxiosInstance = () => {
 			'Content-Type': 'application/json',
 			Accept: 'application/json',
 		},
-		withCredentials: true
+		withCredentials: false
 	});
 
 	function parseParams(params: Record<string, any>): string {
@@ -35,8 +37,11 @@ export const useAxiosInstance = () => {
 
 	axiosClient.interceptors.request.use(
 		async (config) => {
-			config.headers.Authorization = `Bearer ${accessToken.value}`;
 
+			if (accessToken.value) {
+				config.headers.Authorization = `Bearer ${accessToken.value}`;
+			}
+			
 			if (config.method === 'get') {
 				config.paramsSerializer = params => parseParams(params);
 			}
@@ -86,7 +91,7 @@ export const useAxiosInstance = () => {
 
 						return axiosClient.request(originalRequest);
 					}
-
+				
 					toast.add({
 						severity: 'error',
 						summary: 'Unauthorize',
@@ -95,6 +100,7 @@ export const useAxiosInstance = () => {
 					});
 
 				} catch (error) {
+					
 					toast.add({
 						severity: 'error',
 						summary: 'Unauthorize',

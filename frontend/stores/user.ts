@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import axios from '../plugins/axios'
 import { useAxiosInstance } from '~/api';
 import { USER_API_PATH } from '~/constants/apiPath';
+import { jwtDecode } from 'jwt-decode'
 
 const $axios =  useAxiosInstance
 
@@ -26,7 +26,9 @@ export const useUserStore = defineStore('user', {
         },
 
         async login(email: string, password: string): Promise<void> {
-            console.log('$axios', axios)
+            
+            console.log("-------- user store login action -------------")
+
             await $axios().post(USER_API_PATH.login, {
                 email: email,
                 password: password

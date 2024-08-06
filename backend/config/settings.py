@@ -9,12 +9,16 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
+from pathlib import Path
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -25,8 +29,36 @@ SECRET_KEY = '_r24_gcwqg-%4zp=48cqg(=16tuh(q!&j+=nl6vlljkfm$#!i!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost","192.168.147.193"]
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',  # for localhost (NUXT Default)
+    'http://192.168.147.193:3000',  # for network 
+    'http://localhost:8000',  # for localhost (Developlemt)
+    'http://192.168.147.193:8000',  # for network (Development)
+)
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with'
+]
+
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
 
 # Application definition
 
@@ -90,12 +122,30 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+if "DATABASE_URL" in env:
+    # DATABASES = {"default": env.db()}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": env("DJANGO_DATABASE_NAME", default="my_app"),
+            "USER": env("DJANGO_DATABASE_USER", default="postgres"),
+            "PASSWORD": env("DJANGO_DATABASE_PASSWORD", default="***"),
+            "HOST": env("DJANGO_DATABASE_HOST", default="localhost"),
+            "PORT": env("DJANGO_DATABASE_PORT", default="5432"),
+        }
     }
-}
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": env("DJANGO_DATABASE_NAME", default="my_app"),
+#             "USER": env("DJANGO_DATABASE_USER", default="postgres"),
+#             "PASSWORD": env("DJANGO_DATABASE_PASSWORD", default="***"),
+#             "HOST": env("DJANGO_DATABASE_HOST", default="localhost"),
+#             "PORT": env("DJANGO_DATABASE_PORT", default="5432"),
+#         }
+#     }
 
 
 # Password validation
