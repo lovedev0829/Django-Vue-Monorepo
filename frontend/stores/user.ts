@@ -26,21 +26,25 @@ export const useUserStore = defineStore('user', {
         },
 
         async login(email: string, password: string): Promise<void> {
-            
-            console.log("-------- user store login action -------------")
-
             await $axios().post(USER_API_PATH.login, {
                 email: email,
                 password: password
             })
         },
 
-        async register(name: string, email: string, password: string, confirmPassword: string): Promise<void> {
+        async register( { firstName, lastName, email, password } : 
+                        { 
+                            firstName: string, 
+                            lastName: string, 
+                            email: string, 
+                            password: string
+                        }): Promise<void> {
+            
             await $axios().post(USER_API_PATH.register, {
-                name: name,
+                first_name: firstName,
+                last_name: lastName,
                 email: email,
-                password: password,
-                password_confirmation: confirmPassword
+                password: password
             })
         },
 

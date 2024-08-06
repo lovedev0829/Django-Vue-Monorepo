@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { useToast } from 'primevue/usetoast';
+// import { useToast } from 'primevue/usetoast';
 
 export const useAxiosInstance = () => {
 	const config = useRuntimeConfig();
 	const refreshToken = useCookie('refresh_token');
 	const accessToken = useCookie('access_token');
 	const { API_BASE_URL } = config.public
-	const toast = useToast();
+	// const toast = useToast();
 	
 	console.log('NUXT_API_BASE', API_BASE_URL)
 	const axiosClient = axios.create({
@@ -38,8 +38,8 @@ export const useAxiosInstance = () => {
 	axiosClient.interceptors.request.use(
 		async (config) => {
 
-			if (accessToken.value) {
-				config.headers.Authorization = `Bearer ${accessToken.value}`;
+			if (accessToken?.value) {
+				config.headers.Authorization = `Bearer ${accessToken?.value}`;
 			}
 			
 			if (config.method === 'get') {
@@ -77,6 +77,7 @@ export const useAxiosInstance = () => {
 				};
 
 				try {
+					
 					const res = await axios.post(
 						API_BASE_URL as string,
 						{
@@ -84,6 +85,7 @@ export const useAxiosInstance = () => {
 						},
 						configHeaders
 					);
+
 					if (res.data.access_token) {
 						accessToken.value = res?.data?.access_token;
 						refreshToken.value = res?.data?.refresh_token;
@@ -92,21 +94,21 @@ export const useAxiosInstance = () => {
 						return axiosClient.request(originalRequest);
 					}
 				
-					toast.add({
-						severity: 'error',
-						summary: 'Unauthorize',
-						detail: 'Please login',
-						life: 3000
-					});
+					// toast.add({
+					// 	severity: 'error',
+					// 	summary: 'Unauthorize',
+					// 	detail: 'Please login',
+					// 	life: 3000
+					// });
 
 				} catch (error) {
 					
-					toast.add({
-						severity: 'error',
-						summary: 'Unauthorize',
-						detail: 'Please login',
-						life: 3000
-					});
+					// toast.add({
+					// 	severity: 'error',
+					// 	summary: 'Unauthorize',
+					// 	detail: 'Please login',
+					// 	life: 3000
+					// });
 
 					return error;
 				}
