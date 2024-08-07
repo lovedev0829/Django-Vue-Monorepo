@@ -34,9 +34,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-      public: {
-          API_BASE_URL: process.env.NODE_ENV === "development" ? 'http://192.168.147.193:8000/api/v1' : process.env.API_BASE_URL,
-      }
+    public: {
+        API_BASE_URL: process.env.NODE_ENV === "development" ? 'http://192.168.147.193:8000/api/v1' : process.env.API_BASE_URL,
+    },
   },
 
   i18n: {

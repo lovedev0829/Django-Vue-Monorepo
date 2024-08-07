@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 import requests
+from .serializers import UserSerializer  # Make sure to import your serializer
 
 class RegisterUserView(CreateAPIView):
     queryset = get_user_model().objects.all()
@@ -31,16 +32,16 @@ def login(request):
     
     token_endpoint = reverse(viewname='token_obtain_pair', request=request)
     tokens = requests.post(token_endpoint, data=request.data).json()
-    
+    user_serializer = UserSerializer(user)
+    print(user_serializer)
     response.data = {
         'access_token': tokens.get('access'),
         'refresh_token': tokens.get('refresh'),
-        'email': user.email
+        'user': user_serializer.data
     }
     
     return response
     
-
 
 class CurrentLoggedInUser(ModelViewSet):
     queryset = get_user_model().objects.all()

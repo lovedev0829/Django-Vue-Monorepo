@@ -1,39 +1,68 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 import { useAxiosInstance } from '~/api';
 import { USER_API_PATH } from '~/constants/apiPath';
-import { jwtDecode } from 'jwt-decode'
 
 const $axios =  useAxiosInstance
 
-interface IUserStoreState {
+
+interface IUser {
     id: string;
-    name: string;
-    bio: string;
-    image: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: string;
 }
+
+interface IUserStoreState {
+    user: IUser | null;
+    access_token: string;
+    refresh_token: string;
+    isAuthenticated: string;
+}
+
+interface LoginResponse {
+    access_token: string;
+    refresh_token: string;
+    user: IUser;
+}
+
 
 export const useUserStore = defineStore('user', {
     state: (): IUserStoreState => ({
-        id: '',
-        name: '',
-        bio: '',
-        image: ''
+        user: null,
+        access_token: '',
+        refresh_token: '',
+        isAuthenticated: 'false',
     }),
     actions: {
-
-        async getTokens(): Promise<void> {
-            await $axios().get(USER_API_PATH.getTokens)
+        initializeStore() {
+            
+            const accessToken = useCookie('access_token');
+            const refreshToken = useCookie('refresh_token');
+            const isAuthenticated = useCookie('isAuthenticated');
+            const userCookie = useCookie('user');
+            
+            this.user = userCookie.value || null;
+            this.access_token = accessToken.value || "";
+            this.refresh_token = refreshToken.value || "";
+            this.isAuthenticated = isAuthenticated.value || "false";
         },
-
-        async login(email: string, password: string): Promise<void> {
-            await $axios().post(USER_API_PATH.login, {
+        async login(email: string, password: string): Promise<any> {
+            
+            const response = await $axios().post(USER_API_PATH.login, {
                 email: email,
                 password: password
-            })
+            });
+
+            if(response?.access_token) {
+                this.setTokens(response)
+            }
+
+            return response
+            
         },
 
-        async register( { firstName, lastName, email, password } : 
-                        { 
+        async register( { firstName, lastName, email, password } : { 
                             firstName: string, 
                             lastName: string, 
                             email: string, 
@@ -48,25 +77,7 @@ export const useUserStore = defineStore('user', {
             })
         },
 
-        async getUser(): Promise<void> {
-            let res = await $axios().get(USER_API_PATH.getUser)
-
-            this.$state.id = res.data[0].id
-            this.$state.name = res.data[0].name
-            this.$state.bio = res.data[0].bio
-            this.$state.image = res.data[0].image
-        },
-
-        async updateUserImage(data: any): Promise<any> {
-            return await $axios().post(USER_API_PATH.updateImage, data)
-        },
-
-        async updateUser(name: string, bio: string): Promise<any> {
-            return await $axios().patch(USER_API_PATH.updateUser, {
-                name: name,
-                bio: bio
-            })
-        },
+   
 
         async logout(): Promise<void> {
             await $axios().post(USER_API_PATH.logout)
@@ -74,11 +85,36 @@ export const useUserStore = defineStore('user', {
         },
 
         resetUser(): void {
-            this.$state.id = ''
-            this.$state.name = ''
-            this.$state.bio = ''
-            this.$state.image = ''
-        }
+            const accessToken = useCookie('access_token');
+            const refreshToken = useCookie('refresh_token');
+            const userCookie = useCookie('user');
+            const isAuthenticated = useCookie('isAuthenticated');
 
+            this.user = null;
+            this.access_token = '';
+            this.refresh_token = '';
+            this.isAuthenticated = 'false';
+
+            accessToken.value = '';
+            refreshToken.value = '';
+            userCookie.value = null;
+            isAuthenticated.value = "false";
+        },
+
+        setTokens(response: LoginResponse): void {
+            const accessToken = useCookie('access_token');
+            const refreshToken = useCookie('refresh_token');
+            const userCookie = useCookie('user');
+            const isAuthenticated = useCookie('isAuthenticated');
+
+            this.access_token = response.access_token;
+            this.refresh_token = response.refresh_token;
+            this.isAuthenticated = "true";
+
+            accessToken.value = response.access_token;
+            refreshToken.value = response.refresh_token;
+            userCookie.value = JSON.stringify(response.user);
+            isAuthenticated.value = "true";
+        },
     },
 })

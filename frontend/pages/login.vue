@@ -79,24 +79,30 @@
 import ThirdPartyAuthButtons from '@/components/auth/ThirdPartyAuthButtons.vue';
 
 const { $userStore } = useNuxtApp();
-
+const toast = useToast();
+const router = useRouter()
 const email = ref(null);
 const password = ref(null);
-
-
 const login = async () => {
+
   try {
-    await $userStore.login(email.value, password.value);
-    await $userStore.getUser();
-  } catch (error) {
-    console.log('error', error);
-  }
-};
+        
+        await $userStore.login(email.value, password.value);
+
+        router.push("/dashboard");
+
+    } catch (error) {
+            toast.add({
+                severity: 'error',
+                summary: 'Authentication',
+                detail: "Something went wrong!",
+                life: 3000,
+            });  
+        }
+    };
 
 const thirdPartyAuth = (provider) => {
-    
   console.log(`Third-party auth with ${provider}`);
-  // Add third-party auth logic here
 };
 
 </script>

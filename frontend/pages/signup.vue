@@ -22,7 +22,7 @@
             .label('Terms agreement'),
     });
 
-    const { defineField, handleSubmit, errors, resetForm } = useForm({
+    const { defineField, handleSubmit, errors } = useForm({
         validationSchema: schema
     });
 
@@ -35,8 +35,6 @@
 
     const onSubmit = handleSubmit(async (values) => {
     
-        console.log('Submitted with', values);
-        
         try {
 
             await $userStore.register({
