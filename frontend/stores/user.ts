@@ -4,7 +4,6 @@ import { USER_API_PATH } from '~/constants/apiPath';
 
 const $axios =  useAxiosInstance
 
-
 interface IUser {
     id: string;
     first_name: string;
@@ -78,7 +77,6 @@ export const useUserStore = defineStore('user', {
         },
 
    
-
         async logout(): Promise<void> {
             await $axios().post(USER_API_PATH.logout)
             this.resetUser()
@@ -89,11 +87,6 @@ export const useUserStore = defineStore('user', {
             const refreshToken = useCookie('refresh_token');
             const userCookie = useCookie('user');
             const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
-
-            this.user = null;
-            this.access_token = '';
-            this.refresh_token = '';
-            this.isAuthenticated = false;
 
             accessToken.value = '';
             refreshToken.value = '';
@@ -106,10 +99,6 @@ export const useUserStore = defineStore('user', {
             const refreshToken = useCookie('refresh_token');
             const userCookie = useCookie('user');
             const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
-
-            this.access_token = response.access_token;
-            this.refresh_token = response.refresh_token;
-            this.isAuthenticated = true;
 
             accessToken.value = response.access_token;
             refreshToken.value = response.refresh_token;
