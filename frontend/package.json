@@ -17,10 +17,12 @@
     },
     "dependencies": {
         "@pinia/nuxt": "^0.5.1",
+        "@sidebase/nuxt-auth": "^0.8.1",
         "@vee-validate/yup": "^4.13.2",
         "axios": "^1.6.8",
         "eslint": "8.30.0",
         "jwt-decode": "^4.0.0",
+        "next-auth": "^4.21.1",
         "nuxt": "^3.11.0",
         "pinia": "^2.1.7",
         "postcss": "^8.4.36",

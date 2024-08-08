@@ -17,7 +17,7 @@ interface IUserStoreState {
     user: IUser | null;
     access_token: string;
     refresh_token: string;
-    isAuthenticated: string;
+    isAuthenticated: string | boolean;
 }
 
 interface LoginResponse {
@@ -32,31 +32,31 @@ export const useUserStore = defineStore('user', {
         user: null,
         access_token: '',
         refresh_token: '',
-        isAuthenticated: 'false',
+        isAuthenticated: false,
     }),
     actions: {
         initializeStore() {
             
             const accessToken = useCookie('access_token');
             const refreshToken = useCookie('refresh_token');
-            const isAuthenticated = useCookie('isAuthenticated');
-            const userCookie = useCookie('user');
+            const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
+            const userCookie =  useCookie<IUser | null>('user');
             
             this.user = userCookie.value || null;
             this.access_token = accessToken.value || "";
             this.refresh_token = refreshToken.value || "";
-            this.isAuthenticated = isAuthenticated.value || "false";
+            this.isAuthenticated = isAuthenticated.value || false;
         },
         async login(email: string, password: string): Promise<any> {
             
-            const response = await $axios().post(USER_API_PATH.login, {
+            const response: LoginResponse = await $axios().post(USER_API_PATH.login, {
                 email: email,
                 password: password
             });
 
-            if(response?.access_token) {
-                this.setTokens(response)
-            }
+                if(response?.access_token) {
+                    this.setTokens(response)
+                }
 
             return response
             
@@ -88,33 +88,33 @@ export const useUserStore = defineStore('user', {
             const accessToken = useCookie('access_token');
             const refreshToken = useCookie('refresh_token');
             const userCookie = useCookie('user');
-            const isAuthenticated = useCookie('isAuthenticated');
+            const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
 
             this.user = null;
             this.access_token = '';
             this.refresh_token = '';
-            this.isAuthenticated = 'false';
+            this.isAuthenticated = false;
 
             accessToken.value = '';
             refreshToken.value = '';
             userCookie.value = null;
-            isAuthenticated.value = "false";
+            isAuthenticated.value = false;
         },
 
         setTokens(response: LoginResponse): void {
             const accessToken = useCookie('access_token');
             const refreshToken = useCookie('refresh_token');
             const userCookie = useCookie('user');
-            const isAuthenticated = useCookie('isAuthenticated');
+            const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
 
             this.access_token = response.access_token;
             this.refresh_token = response.refresh_token;
-            this.isAuthenticated = "true";
+            this.isAuthenticated = true;
 
             accessToken.value = response.access_token;
             refreshToken.value = response.refresh_token;
             userCookie.value = JSON.stringify(response.user);
-            isAuthenticated.value = "true";
+            isAuthenticated.value = true;
         },
     },
 })
