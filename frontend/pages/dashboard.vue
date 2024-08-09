@@ -2,6 +2,9 @@
     <div>
         Welcome to MonoRepo Dashboard!
     </div>
+    <Button>
+         Logout
+    </Button>
 </template>
 
 <script setup>

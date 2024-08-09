@@ -1,4 +1,8 @@
 <!-- /pages/index.vue -->
+<template>
+
+</template>
+
 <script setup>
 
 import { useRouter } from 'vue-router';

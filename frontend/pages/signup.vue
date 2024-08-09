@@ -2,13 +2,14 @@
     import { useForm } from 'vee-validate';
     import * as yup from 'yup';
     import InputField from '~/components/InputField.vue';
+    import ThirdPartyAuthButtons from '@/components/auth/ThirdPartyAuthButtons.vue';
 
     const { $userStore, $router } = useNuxtApp();
 
     const schema = yup.object({
         email: yup.string().required().email().label('Email address'),
-        firstName: yup.string().required().label('First Name'),
-        lastName: yup.string().required().label('Last Name'),
+        // firstName: yup.string().required().label('First Name'),
+        // lastName: yup.string().required().label('Last Name'),
         password: yup.string().required().min(6).label('Password'),
         passwordConfirm: yup
             .string()
@@ -26,8 +27,8 @@
         validationSchema: schema
     });
 
-    const [firstName, firstNameProps] = defineField('firstName');
-    const [lastName, lastNameProps] = defineField('lastName');
+    // const [firstName, firstNameProps] = defineField('firstName');
+    // const [lastName, lastNameProps] = defineField('lastName');
     const [email, emailProps] = defineField('email');
     const [password, passwordProps] = defineField('password');
     const [passwordConfirm, passwordConfirmProps] = defineField('passwordConfirm');
@@ -50,6 +51,12 @@
             console.log('error', error);
         }
     });
+
+      
+    const thirdPartyAuth = (provider) => {
+        
+    };
+
 </script>
 
 <template>
@@ -61,7 +68,7 @@
               Sign Up
             </h1>
             <Form @submit.prevent="onSubmit" class="space-y-4">
-              <InputField
+              <!-- <InputField
                 id="firstName"
                 label="First Name"
                 type="text"
@@ -82,7 +89,7 @@
               />
               <small id="lastName-help" class="p-error">
                 {{ errors.lastName }}
-              </small>
+              </small> -->
               <InputField
                 id="email"
                 label="Email"
@@ -124,6 +131,9 @@
                   {{ errors.passwordConfirm }}
                 </small>
               </div>
+        
+              <ThirdPartyAuthButtons @thirdPartyAuth="thirdPartyAuth" />
+        
               <div class="flex items-start">
                 <Checkbox
                   id="terms"
@@ -161,7 +171,7 @@
       </div>
     </div>
   </template>
-  
+
   <style>
   .p-error {
     display: block;

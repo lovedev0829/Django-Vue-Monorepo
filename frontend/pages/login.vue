@@ -86,11 +86,8 @@ const password = ref(null);
 const login = async () => {
 
   try {
-        
         await $userStore.login(email.value, password.value);
-
-        router.push("/dashboard");
-
+        router.push('/dashboard')
     } catch (error) {
             toast.add({
                 severity: 'error',
