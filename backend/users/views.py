@@ -33,7 +33,6 @@ def login(request):
     token_endpoint = reverse(viewname='token_obtain_pair', request=request)
     tokens = requests.post(token_endpoint, data=request.data).json()
     user_serializer = UserSerializer(user)
-    print(user_serializer)
     response.data = {
         'access_token': tokens.get('access'),
         'refresh_token': tokens.get('refresh'),
@@ -52,4 +51,3 @@ class CurrentLoggedInUser(ModelViewSet):
         user_profile = self.queryset.get(email=request.user.email)
         serializer = self.get_serializer(user_profile)
         return Response({'user': serializer.data})
-    

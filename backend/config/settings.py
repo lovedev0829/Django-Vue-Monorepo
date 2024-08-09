@@ -70,6 +70,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.slack',
     'users',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -83,6 +89,42 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': env("GOOGLE_CLIENT_ID", ""),
+            'secret': env("GOOGLE_CLIENT_SECRET", ""),
+            'key': env("GOOGLE_API_KEY", "")
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+         "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        'EMAIL_AUTHENTICATION': True,
+        'FETCH_USERINFO' : True
+    },
+    "github": {
+        # For each provider, you can choose whether or not the
+        # email address(es) retrieved from the provider are to be
+        # interpreted as verified.
+        "VERIFIED_EMAIL": True
+    },
+    'slack': {
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
 }
 
 MIDDLEWARE = [
