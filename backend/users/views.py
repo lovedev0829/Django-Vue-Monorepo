@@ -10,6 +10,8 @@ from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 import requests
 from .serializers import UserSerializer  # Make sure to import your serializer
+from django.http import HttpResponseRedirect
+from config.settings import EMAIL_CONFIRM_REDIRECT_BASE_URL, PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL
 
 class RegisterUserView(CreateAPIView):
     queryset = get_user_model().objects.all()
@@ -51,3 +53,13 @@ class CurrentLoggedInUser(ModelViewSet):
         user_profile = self.queryset.get(email=request.user.email)
         serializer = self.get_serializer(user_profile)
         return Response({'user': serializer.data})
+    
+    
+def email_confirm_redirect(request, key):
+    return HttpResponseRedirect(f"{EMAIL_CONFIRM_REDIRECT_BASE_URL}{key}/")
+
+
+def password_reset_confirm_redirect(request, uidb64, token):
+    return HttpResponseRedirect(
+        f"{PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL}{uidb64}/{token}/"
+    )
