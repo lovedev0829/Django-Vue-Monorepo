@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import RegisterUserView, login, CurrentLoggedInUser
 from dj_rest_auth.views import  PasswordResetConfirmView, PasswordResetView
-from dj_rest_auth.registration.views import RegisterView, ResendEmailVerificationView, VerifyEmailView
+from dj_rest_auth.registration.views import  ResendEmailVerificationView, VerifyEmailView
 from users.views import email_confirm_redirect, password_reset_confirm_redirect, GoogleLogin
 
 urlpatterns = [

@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'allauth',
     'allauth.account',
+    'rest_framework.authtoken',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
@@ -98,9 +99,9 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': env("GOOGLE_CLIENT_ID", ""),
-            'secret': env("GOOGLE_CLIENT_SECRET", ""),
-            'key': env("GOOGLE_API_KEY", "")
+            'client_id': env("GOOGLE_CLIENT_ID"),
+            'secret': env("GOOGLE_CLIENT_SECRET"),
+            'key': env("GOOGLE_API_KEY")
         },
         "SCOPE": [
             "profile",
@@ -207,6 +208,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+def append_trailing_slash(url):
+    return url if url[-1] == "/" else url + "/"
+
+# <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
+EMAIL_CONFIRM_REDIRECT_BASE_URL = append_trailing_slash(
+    "http://localhost:3000/email/confirm/"
+)
+# <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = append_trailing_slash(
+    "http://localhost:3000/password-reset/confirm/"
+)
+
 
 
 # Internationalization
