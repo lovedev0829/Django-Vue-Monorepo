@@ -1,9 +1,2 @@
-asgiref==3.3.1
-Django==3.1.7
-django-cors-headers==3.7.0
-django-rest-framework==0.1.0
-djangorestframework==3.12.4
-djangorestframework-simplejwt==5.2.2  # Ensure this version is compatible
-PyJWT>=2.7.0  # Updated to meet the requirement
-pytz==2021.1
-sqlparse==0.4.1
+# Convenience file for deploy that installs production requirements
+-r requirements/requirements.txt
