@@ -32,7 +32,7 @@ class GitHubProvider(OAuth2Provider):
         return dict(
             email=data.get("email"),
             username=data.get("login"),
-            name=data.get("name"),
+            name=data.get("name"),  
         )
 
     def extract_extra_data(self, data):

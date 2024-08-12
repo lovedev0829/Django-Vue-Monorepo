@@ -63,6 +63,13 @@ CORS_ALLOW_METHODS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'allauth',
+    "allauth.mfa",
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.slack',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,13 +77,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'allauth',
-    'allauth.account',
     'rest_framework.authtoken',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.slack',
     'users',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -129,6 +130,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -167,7 +169,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 if "DATABASE_URL" in env:
-    # DATABASES = {"default": env.db()}
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -178,18 +179,6 @@ if "DATABASE_URL" in env:
             "PORT": env("DJANGO_DATABASE_PORT", default="5432"),
         }
     }
-# else:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": env("DJANGO_DATABASE_NAME", default="my_app"),
-#             "USER": env("DJANGO_DATABASE_USER", default="postgres"),
-#             "PASSWORD": env("DJANGO_DATABASE_PASSWORD", default="***"),
-#             "HOST": env("DJANGO_DATABASE_HOST", default="localhost"),
-#             "PORT": env("DJANGO_DATABASE_PORT", default="5432"),
-#         }
-#     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -211,6 +200,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 def append_trailing_slash(url):
     return url if url[-1] == "/" else url + "/"
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_EMAIL_VERIFICATION = env("ACCOUNT_EMAIL_VERIFICATION", default="none")
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
 
 # <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
 EMAIL_CONFIRM_REDIRECT_BASE_URL = append_trailing_slash(

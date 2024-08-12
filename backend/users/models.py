@@ -33,7 +33,7 @@ class User(AbstractUser, PermissionsMixin):
     last_name = models.CharField(max_length=25)
     password = models.CharField(max_length=200)
     
-    username = None
+    username = models.CharField(max_length=25)
     
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
