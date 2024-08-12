@@ -115,17 +115,5 @@ export const useUserStore = defineStore('user', {
             userCookie.value = JSON.stringify(response.user);
             isAuthenticated.value = true;
         },
-
-        async handleGoogleOAuthCallback(code: string): Promise<void> {
-            try {
-                const response = await $axios().post<LoginResponse>(USER_API_PATH.googleCallback, {
-                    code,
-                    redirect_uri: 'YOUR_FRONTEND_REDIRECT_URI',
-                });
-                this.setTokens(response.data);
-            } catch (error) {
-                throw new Error('Google OAuth Callback Failed');
-            }
-        }
     },
 })

@@ -77,12 +77,16 @@
 <script setup>
 
 import ThirdPartyAuthButtons from '@/components/auth/ThirdPartyAuthButtons.vue';
+import { useAxiosInstance } from '~/api';
+const $axios =  useAxiosInstance
 
 const { $userStore } = useNuxtApp();
 const toast = useToast();
 const router = useRouter()
 const email = ref(null);
 const password = ref(null);
+
+
 const login = async () => {
 
   try {
@@ -98,8 +102,13 @@ const login = async () => {
         }
     };
 
-const thirdPartyAuth = (provider) => {
-  console.log(`Third-party auth with ${provider}`);
+const thirdPartyAuth = async (provider) => {
+
+    const url = `/third-party/${provider}/auth/login`;
+
+    await $axios().post(url).then((res) => {  
+        console.log(res)
+    });
 };
 
 </script>
