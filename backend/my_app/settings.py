@@ -212,11 +212,16 @@ AUTHENTICATION_BACKENDS = (
 # enable social login
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
+        'APP': {
+            'client_id': env("GOOGLE_CLIENT_ID"),
+            'secret': env("GOOGLE_CLIENT_SECRET"),
+            'key': env("GOOGLE_API_KEY")
+        },
         "SCOPE": [
             "profile",
             "email",
         ],
-        "AUTH_PARAMS": {
+         "AUTH_PARAMS": {
             "access_type": "online",
         },
     },
@@ -234,6 +239,8 @@ TURNSTILE_SECRET = env("TURNSTILE_SECRET", default=None)
 
 
 # Internationalization
+
+BASE_BACKEND_URL="http://localhost:8000"
 
 LOCALE_PATHS = (BASE_DIR / "locale",)
 
@@ -370,8 +377,6 @@ DJSTRIPE_WEBHOOK_SECRET = env("DJSTRIPE_WEBHOOK_SECRET", default="whsec_***")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"  # change to "djstripe_id" if not a new installation
 DJSTRIPE_SUBSCRIBER_MODEL = "teams.Team"
 DJSTRIPE_SUBSCRIBER_MODEL_REQUEST_CALLBACK = lambda request: request.team  # noqa E731
-
-ACTIVE_ECOMMERCE_PRODUCT_IDS = env.list("ACTIVE_ECOMMERCE_PRODUCT_IDS", default=[])
 
 SILENCED_SYSTEM_CHECKS = [
     "djstripe.I002",  # Pegasus uses the same settings as dj-stripe for keys, so don't complain they are here
