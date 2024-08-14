@@ -1,12 +1,27 @@
 <template>
     <div>
-        Welcome to MonoRepo Dashboard!
+      <sidebar-component></sidebar-component>
+      <div class="relative md:ml-64 bg-blueGray-100">
+        <navbar-component></navbar-component>
+      
+      </div>
     </div>
-    <Button>
-         Logout
-    </Button>
-</template>
+  </template>
 
-<script setup>
-    const { $userStore } = useNuxtApp();
-</script>
+  <script>
+      import NavbarComponent from "../components/Navbar.vue";
+      import SidebarComponent from "../components/Sidebar.vue";
+      
+      export default {
+            name: "dashboard-page",
+            components: {
+            NavbarComponent,
+            SidebarComponent,
+            },
+            data() {
+                return {
+                    date: new Date().getFullYear()
+                }
+            }
+      };
+  </script>

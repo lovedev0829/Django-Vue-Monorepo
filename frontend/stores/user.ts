@@ -20,9 +20,12 @@ interface IUserStoreState {
 }
 
 interface LoginResponse {
-    access_token: string;
-    refresh_token: string;
-    user: IUser;
+    status: string,
+    jwt: {
+        access: string;
+        refresh: string;
+        user: IUser;
+    }
 }
 
 
@@ -53,7 +56,7 @@ export const useUserStore = defineStore('user', {
                 password: password
             });
 
-                if(response?.access_token) {
+                if(response?.status === "success") {
                     this.setTokens(response)
                 }
 
@@ -61,18 +64,20 @@ export const useUserStore = defineStore('user', {
             
         },
 
-        async register( { firstName, lastName, email, password } : { 
+        async register( { firstName, lastName, email, password, passwordConfirm } : { 
                             firstName: string, 
                             lastName: string, 
                             email: string, 
-                            password: string
+                            password: string,
+                            passwordConfirm: string
                         }): Promise<void> {
             
             await $axios().post(USER_API_PATH.register, {
                 first_name: firstName,
                 last_name: lastName,
                 email: email,
-                password: password
+                password1: password,
+                password2: passwordConfirm
             })
         },
 
@@ -105,14 +110,14 @@ export const useUserStore = defineStore('user', {
             const userCookie = useCookie('user');
             const isAuthenticated = useCookie<string | boolean>('isAuthenticated');
 
-            this.$state.access_token = response.access_token;
-            this.$state.refresh_token = response.refresh_token;
-            this.$state.user = response.user;
+            this.$state.access_token = response.jwt?.access;
+            this.$state.refresh_token = response.jwt?.refresh;
+            this.$state.user = response.jwt?.user;
             this.$state.isAuthenticated = true;
 
-            accessToken.value = response.access_token;
-            refreshToken.value = response.refresh_token;
-            userCookie.value = JSON.stringify(response.user);
+            accessToken.value = response.jwt?.access;
+            refreshToken.value = response.jwt?.refresh;
+            userCookie.value = JSON.stringify(response.jwt?.user);
             isAuthenticated.value = true;
         },
     },

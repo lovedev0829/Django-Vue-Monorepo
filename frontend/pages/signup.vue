@@ -43,6 +43,7 @@
                     lastName: values.lastName,
                     email: values.email,
                     password: values.password,
+                    passwordConfirm: values.passwordConfirm
             });
         
             $router.push('/login');

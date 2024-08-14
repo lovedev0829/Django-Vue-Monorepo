@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@pinia/nuxt": "^0.5.1",
+        "@popperjs/core": "^2.11.8",
         "@sidebase/nuxt-auth": "^0.8.1",
         "@vee-validate/yup": "^4.13.2",
         "axios": "^1.6.8",
