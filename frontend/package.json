@@ -28,7 +28,7 @@
         "pinia": "^2.1.7",
         "postcss": "^8.4.36",
         "primeicons": "^6.0.1",
-        "primevue": "^3.50.0",
+        "primevue": "^3.53.0",
         "vee-validate": "^4.13.2",
         "vue": "^3.4.21",
         "vue-router": "^4.3.0",

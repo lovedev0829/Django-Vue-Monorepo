@@ -54,7 +54,6 @@
             command: async () => {
                 await $userStore.logout();
                 router.push('/login')
-
             }
         }
     ]);

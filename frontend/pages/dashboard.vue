@@ -1,27 +1,18 @@
 <template>
-    <div>
-      <sidebar-component></sidebar-component>
-      <div class="relative md:ml-64 bg-blueGray-100">
-        <navbar-component></navbar-component>
-      
-      </div>
-    </div>
-  </template>
+    <main-layout-component>
+        <div id="dashboard-componenet">
+            hello world
+        </div>
+    </main-layout-component>
+</template>
 
   <script>
-      import NavbarComponent from "../components/Navbar.vue";
-      import SidebarComponent from "../components/Sidebar.vue";
+      import MainLayoutComponent from "../layouts/main.vue";
       
       export default {
             name: "dashboard-page",
             components: {
-            NavbarComponent,
-            SidebarComponent,
+              MainLayoutComponent,
             },
-            data() {
-                return {
-                    date: new Date().getFullYear()
-                }
-            }
       };
   </script>
