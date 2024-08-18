@@ -7,3 +7,10 @@ export const USER_API_PATH = {
     updateUser: '/api/update-user',
     logout: '/logout',
 }
+
+
+export const TEAM_API_PATH = {
+    create: '/teams/create',
+}
+
+

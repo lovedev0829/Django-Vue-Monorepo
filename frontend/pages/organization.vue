@@ -6,10 +6,8 @@
                 <h5>Manage your organization</h5>
             </template>
             <template #content>
-                <Menubar :model="items"  class="bg-white border-0" />
-                <div>
-                    
-                </div>
+                <SelectButton v-model="menu" :options="menus" optionLabel="label" dataKey="label" />
+                <organization-component></organization-component>
             </template>
         </Card>
     </main-layout-component>
@@ -18,27 +16,18 @@
 <script setup>
 
     import MainLayoutComponent from "../layouts/main.vue";
+    import OrganizationComponent from '@/components/organization/create.vue'
+    
+
     import { ref } from "vue";
+    
+    const menu = ref("")
+    const action = ref("");
 
-    const items = ref([
-        {
-            label: 'Memeber',
-            icon: 'pi pi-users',
-            command: () => { /* Your command logic here */ },
-            active: true,
-            focused: true,
-
-        },
-        {
-            label: 'General',
-            icon: 'pi pi-star',
-            active: false
-        },
-        {
-            label: 'Subscription',
-            icon: 'pi pi-calendar',
-            active: false
-        },
-       
+    const menus = ref([
+        { label: 'Memeber', value: 'member' },
+        { label: 'General', value: 'general' },
+        { label: 'Subscription', value: 'subscription' }
     ]);
+
 </script>

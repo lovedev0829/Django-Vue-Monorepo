@@ -103,6 +103,7 @@ const login = async () => {
     };
 
 const thirdPartyAuth = async (provider) => {
+
     const url = `/third-party/${provider}/auth/login/`;
 
     await $axios().post(url).then((res) => { 
@@ -110,6 +111,7 @@ const thirdPartyAuth = async (provider) => {
             window.location.href=res.authorization_url
          }
     });
+    
 };
 
 </script>
