@@ -19,16 +19,13 @@ def get_team_api_url_templates() -> Dict[str, str]:
     invitation_url_templates = {
         api_url: reverse(api_url, args=[TEAM_PLACEHOLDER, INVITATION_PLACEHOLDER]) for api_url in invite_api_url_names
     }
-    # we can only reverse with a number so we first do that, then replace with the key used by JavaScript
     tmp_integer_url_key = 999999
     membership_url_templates = {
         api_url: reverse(api_url, args=[TEAM_PLACEHOLDER, tmp_integer_url_key]) for api_url in membership_api_url_names
     }
-    # convert from numbers to the actual key
     membership_url_templates = {
         url_name: url.replace(str(tmp_integer_url_key), MEMBERSHIP_PLACEHOLDER)
         for url_name, url in membership_url_templates.items()
     }
 
-    # this just merges the dicts: https://stackoverflow.com/a/26853961/8207
     return {**team_api_url_templates, **invitation_url_templates, **membership_url_templates}

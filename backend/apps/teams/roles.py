@@ -3,12 +3,14 @@ from __future__ import annotations
 from apps.users.models import CustomUser
 
 ROLE_ADMIN = "admin"
-ROLE_MEMBER = "member"
+ROLE_MEMBER = "owner"
+ROLE_OWNER = "member"
 
 ROLE_CHOICES = (
     # customize roles here
     (ROLE_ADMIN, "Administrator"),
     (ROLE_MEMBER, "Member"),
+    (ROLE_OWNER, "Owner"),
 )
 
 

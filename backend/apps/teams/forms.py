@@ -10,24 +10,6 @@ from apps.users.forms import TurnstileSignupForm
 
 
 class TeamSignupForm(TurnstileSignupForm):
-    invitation_id = forms.CharField(widget=forms.HiddenInput(), required=False)
-    team_name = forms.CharField(
-        label=_("Team Name (Optional)"),
-        max_length=100,
-        widget=forms.TextInput(attrs={"placeholder": _("Team Name (Optional)")}),
-        required=False,
-    )
-    terms_agreement = forms.BooleanField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # blank out overly-verbose help text
-        self.fields["password1"].help_text = ""
-        link = '<a class="link" href={} target="_blank">{}</a>'.format(
-            reverse("web:terms"),
-            _("Terms and Conditions"),
-        )
-        self.fields["terms_agreement"].label = mark_safe(_("I agree to the {terms_link}").format(terms_link=link))
 
     def clean(self):
         cleaned_data = super().clean()

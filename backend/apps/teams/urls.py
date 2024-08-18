@@ -1,37 +1,22 @@
 from django.urls import path
 from . import views
 
-from rest_framework import routers
-
-
 app_name = "teams"
 
 urlpatterns = [
-    path("", views.manage_teams, name="teams_home"),
-    path("manage/", views.manage_teams, name="manage_teams"),
-    path("manage/<path:path>", views.manage_teams, name="manage_teams"),
-    # invitation acceptance views
-    path("invitation/<slug:invitation_id>/", views.accept_invitation, name="accept_invitation"),
-    path("invitation/<slug:invitation_id>/signup/", views.SignupAfterInvite.as_view(), name="signup_after_invite"),
+    # Team URLs
+    path("create", views.TeamViewSet.as_view({'post': 'create'}), name='team-create'),
+    path("list/", views.TeamViewSet.as_view({'get': 'list'}), name='team-list'),
+    path("retrieve/<int:pk>/", views.TeamViewSet.as_view({'get': 'retrieve'}), name='team-retrieve'),
+    path("update/<int:pk>/", views.TeamViewSet.as_view({'put': 'update'}), name='team-update'),
+    path("partial-update/<int:pk>/", views.TeamViewSet.as_view({'patch': 'partial_update'}), name='team-partial-update'),
+    path("destroy/<int:pk>/", views.TeamViewSet.as_view({'delete': 'destroy'}), name='team-destroy'),
+
+    # Invitation URLs
+    path("invitations/create/", views.InvitationViewSet.as_view({'post': 'create'}), name='invitation-create'),
+    path("invitations/list/", views.InvitationViewSet.as_view({'get': 'list'}), name='invitation-list'),
+    path("invitations/retrieve/<int:pk>/", views.InvitationViewSet.as_view({'get': 'retrieve'}), name='invitation-retrieve'),
+    path("invitations/update/<int:pk>/", views.InvitationViewSet.as_view({'put': 'update'}), name='invitation-update'),
+    path("invitations/partial-update/<int:pk>/", views.InvitationViewSet.as_view({'patch': 'partial_update'}), name='invitation-partial-update'),
+    path("invitations/destroy/<int:pk>/", views.InvitationViewSet.as_view({'delete': 'destroy'}), name='invitation-destroy'),
 ]
-
-team_urlpatterns = (
-    [
-        # team management views
-        path("", views.manage_team, name="manage_team"),
-        path("members/<int:membership_id>/", views.team_membership_details, name="team_membership_details"),
-        path("members/<int:membership_id>/remove/", views.remove_team_membership, name="remove_team_membership"),
-        path("invite/<slug:invitation_id>/", views.resend_invitation, name="resend_invitation"),
-    ],
-    "single_team",
-)
-
-
-# DRF config for API views (required for React Teams, implementation, optional otherwise)
-router = routers.DefaultRouter()
-router.register("api/teams", views.TeamViewSet)
-urlpatterns += router.urls
-
-single_team_router = routers.DefaultRouter()
-single_team_router.register("api/invitations", views.InvitationViewSet)
-team_urlpatterns[0].extend(single_team_router.urls)

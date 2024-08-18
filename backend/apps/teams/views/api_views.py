@@ -66,7 +66,6 @@ class InvitationViewSet(viewsets.ModelViewSet):
         if Invitation.objects.filter(team=team, email=email, is_accepted=False):
             raise DRFValidationError(
                 {
-                    # this mimics the same validation format used by the serializer so it can work easily on the front end.
                     "email": [
                         _(
                             'There is already a pending invitation for {}. You can resend it by clicking "Resend Invitation".'
@@ -76,18 +75,13 @@ class InvitationViewSet(viewsets.ModelViewSet):
             )
 
     def get_queryset(self):
-        # filter queryset based on logged in user and team
         return self.queryset.filter(team=self.team)
 
     def perform_create(self, serializer):
-        # ensure logged in user is set on the model during creation
-        # and can access the underlying team
         team = serializer.validated_data["team"]
         self._ensure_team_match(team)
         self._ensure_no_pending_invite(team, serializer.validated_data["email"])
 
-        # unfortunately, the permissions class doesn't handle creation well
-        # https://www.django-rest-framework.org/api-guide/permissions/#limitations-of-object-level-permissions
         if not is_admin(self.request.user, team):
             raise PermissionDenied()
 
