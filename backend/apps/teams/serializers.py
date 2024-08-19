@@ -6,6 +6,7 @@ from apps.subscriptions.serializers import SubscriptionSerializer
 from .helpers import get_next_unique_team_slug
 from .models import Team, Membership, Invitation
 from .roles import is_admin
+from .roles import is_owner
 
 
 class MembershipSerializer(serializers.ModelSerializer):
@@ -35,8 +36,8 @@ class TeamSerializer(serializers.ModelSerializer):
     )
     members = MembershipSerializer(source="sorted_memberships", many=True, read_only=True)
     invitations = InvitationSerializer(many=True, read_only=True, source="pending_invitations")
-    dashboard_url = serializers.ReadOnlyField()
     is_admin = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
     subscription = SubscriptionSerializer(source="wrapped_subscription", read_only=True)
 
     class Meta:
@@ -47,14 +48,17 @@ class TeamSerializer(serializers.ModelSerializer):
             "slug",
             "members",
             "invitations",
-            "dashboard_url",
             "is_admin",
+            "is_owner",
             "subscription",
             "has_active_subscription",
         )
 
     def get_is_admin(self, obj) -> bool:
         return is_admin(self.context["request"].user, obj)
+    
+    def get_is_owner(self, obj) -> bool:
+        return is_owner(self.context["request"].user, obj)
 
     def create(self, validated_data):
         team_name = validated_data.get("name", None)

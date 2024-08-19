@@ -61,6 +61,6 @@ def create_default_team_for_user(user: CustomUser, team_name: str = None):
     if not slug:
         slug = get_next_unique_team_slug("team")
     team = Team.objects.create(name=team_name, slug=slug)
-    team.members.add(user, through_defaults={"role": roles.ROLE_ADMIN})
+    team.members.add(user, through_defaults={"role": roles.ROLE_OWNER})
     team.save()
     return team

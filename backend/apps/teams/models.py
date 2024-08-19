@@ -40,11 +40,6 @@ class Team(SubscriptionModelBase, BaseModel):
     def pending_invitations(self):
         return self.invitations.filter(is_accepted=False)
 
-    @property
-    def dashboard_url(self) -> str:
-        return reverse("web_team:home", args=[self.slug])
-
-
 class Membership(BaseModel):
     """
     A user's team membership
@@ -60,6 +55,9 @@ class Membership(BaseModel):
 
     def is_admin(self) -> bool:
         return self.role == roles.ROLE_ADMIN
+    
+    def is_owner(self) -> bool:
+        return self.role == roles.ROLE_OWNER
 
     class Meta:
         # Ensure a user can only be associated with a team once.
