@@ -8,9 +8,12 @@ export const USER_API_PATH = {
     logout: '/logout',
 }
 
-
 export const TEAM_API_PATH = {
+    list: '/teams/list',
     create: '/teams/create',
+    update: '/teams/update',
+    retrieve: '/teams/retrieve',
+    delete: '/teams/destroy',
 }
 
 

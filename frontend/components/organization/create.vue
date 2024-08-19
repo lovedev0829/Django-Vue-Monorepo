@@ -16,10 +16,11 @@
 <script setup>
 
     import { ref } from "vue";
-    import TeamService from "@/services/TeamService.ts"
-    
+    import { useTeamStore } from '@/stores/team'; // Import the team store
+
     const toast = useToast();
     const name = ref('');
+    const teamStore = useTeamStore();
 
     const createHandle = async () => {
         if(name.value === "")     {
@@ -32,8 +33,12 @@
             return
         }
 
-        await TeamService.createTeam(name.value).then(res => {
-            console.log(res)
+        await teamStore.createTeam(name.value).then(res => {
+            toast.add({
+                severity: 'success',
+                detail: "Team created successfully!",
+                life: 3000,
+            });  
         })
     }
 
