@@ -11,7 +11,7 @@ from ..models import Team, Invitation
 from ..permissions import TeamAccessPermissions, TeamModelAccessPermissions
 from ..roles import is_admin, is_member
 from ..serializers import TeamSerializer, InvitationSerializer
-
+from ..constants import TenantUserRole
 
 @extend_schema_view(
     create=extend_schema(operation_id="teams_create"),
@@ -33,7 +33,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # ensure logged in user is set on the model during creation
         team = serializer.save()
-        team.members.add(self.request.user, through_defaults={"role": "admin"})
+        team.members.add(self.request.user, through_defaults={"role": TenantUserRole.OWNER})
 
 
 @extend_schema(tags=["teams"])
@@ -45,6 +45,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     partial_update=extend_schema(operation_id="invitations_partial_update"),
     destroy=extend_schema(operation_id="invitations_destroy"),
 )
+
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer

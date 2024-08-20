@@ -11,7 +11,7 @@ from waffle.utils import keyfmt, get_cache
 from apps.subscriptions.models import SubscriptionModelBase
 from apps.utils.models import BaseModel
 from apps.web.meta import absolute_url
-
+from . import constants
 from . import roles
 
 
@@ -23,7 +23,8 @@ class Team(SubscriptionModelBase, BaseModel):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="teams", through="Membership")
-
+    type: str = models.CharField(choices=constants.TenantType.choices)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # your team customizations go here.
 
     def __str__(self):
@@ -31,7 +32,7 @@ class Team(SubscriptionModelBase, BaseModel):
 
     @property
     def email(self):
-        return self.membership_set.filter(role=roles.ROLE_ADMIN).first().user.email
+        return self.membership_set.filter(role=constants.TenantUserRole.ADMIN).first().user.email
 
     @property
     def sorted_memberships(self):
@@ -54,11 +55,14 @@ class Membership(BaseModel):
         return f"{self.user}: {self.team}"
 
     def is_admin(self) -> bool:
-        return self.role == roles.ROLE_ADMIN
+        return self.role == constants.TenantUserRole.ADMIN
     
     def is_owner(self) -> bool:
-        return self.role == roles.ROLE_OWNER
-
+        return self.role == constants.TenantUserRole.OWNER
+    
+    def is_memeber(self) -> bool:
+        return self.role == constants.TenantUserRole.MEMBER
+    
     class Meta:
         # Ensure a user can only be associated with a team once.
         unique_together = ("team", "user")
@@ -72,7 +76,7 @@ class Invitation(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="invitations")
     email = models.EmailField()
-    role = models.CharField(max_length=100, choices=roles.ROLE_CHOICES, default=roles.ROLE_MEMBER)
+    role = models.CharField(max_length=100, choices=roles.ROLE_CHOICES, default=constants.TenantUserRole.MEMBER)
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="sent_invitations")
     is_accepted = models.BooleanField(default=False)
     accepted_by = models.ForeignKey(

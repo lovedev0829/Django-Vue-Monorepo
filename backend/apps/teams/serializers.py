@@ -2,11 +2,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from apps.subscriptions.serializers import SubscriptionSerializer
-
+from django.conf import settings
 from .helpers import get_next_unique_team_slug
 from .models import Team, Membership, Invitation
-from .roles import is_admin
-from .roles import is_owner
+from .roles import is_admin, is_owner
+from . import constants
 
 
 class MembershipSerializer(serializers.ModelSerializer):
@@ -39,7 +39,11 @@ class TeamSerializer(serializers.ModelSerializer):
     is_admin = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
     subscription = SubscriptionSerializer(source="wrapped_subscription", read_only=True)
-
+    
+    # Set creator and type as read-only since they are set in the create method
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    type = serializers.CharField(read_only=True)
+    
     class Meta:
         model = Team
         fields = (
@@ -47,6 +51,8 @@ class TeamSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "members",
+            "creator",
+            "type",
             "invitations",
             "is_admin",
             "is_owner",
@@ -63,4 +69,7 @@ class TeamSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         team_name = validated_data.get("name", None)
         validated_data["slug"] = validated_data.get("slug", get_next_unique_team_slug(team_name))
+        validated_data["creator"] = self.context["request"].user
+        validated_data["type"] = constants.TenantType.ORGANIZATION
+        
         return super().create(validated_data)

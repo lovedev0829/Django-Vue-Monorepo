@@ -190,9 +190,9 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
-ACCOUNT_FORMS = {
-    "signup": "apps.teams.forms.TeamSignupForm",
-}
+# ACCOUNT_FORMS = {
+#     "signup": "apps.teams.forms.TeamSignupForm",
+# }
 SOCIALACCOUNT_FORMS = {
     "signup": "apps.users.forms.CustomSocialSignupForm",
 }

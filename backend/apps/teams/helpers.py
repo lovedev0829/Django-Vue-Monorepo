@@ -6,7 +6,7 @@ from apps.users.models import CustomUser
 from apps.utils.slug import get_next_unique_slug
 from . import roles
 from .models import Team
-
+from . import constants
 
 def get_default_team_name_for_user(user: CustomUser):
     return (user.get_display_name().split("@")[0] or _("My Team")).title()
@@ -60,7 +60,7 @@ def create_default_team_for_user(user: CustomUser, team_name: str = None):
         slug = get_next_unique_team_slug(get_default_team_name_for_user(user))
     if not slug:
         slug = get_next_unique_team_slug("team")
-    team = Team.objects.create(name=team_name, slug=slug)
-    team.members.add(user, through_defaults={"role": roles.ROLE_OWNER})
+    team = Team.objects.create(name=team_name, slug=slug, type=constants.TenantType.DEFAULT, creator=user)
+    team.members.add(user, through_defaults={"role": constants.TenantUserRole.OWNER})
     team.save()
     return team
