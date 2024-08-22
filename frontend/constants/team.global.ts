@@ -10,7 +10,3 @@ export enum TeamUserRole {
 }
 
 export const CURRENT_TEAM_STORAGE_KEY = 'currentTeam';
-
-export const generateTeamPath = (teamId: string) => {
-  
-}

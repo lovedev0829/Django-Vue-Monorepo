@@ -84,12 +84,9 @@
   import NotificationDropdownComponent from "./NotificationDropdown.vue";
   import UserDropdownComponent from "./UserDropdown.vue";
   import { TeamUserRole } from "@/constants/team.global";
-  import { useTeamStore } from "@/stores/team";
-  import { useRouter } from 'vue-router';
-  
+  import { checkTeamPermission, generateTeamPath } from '~/helper/team.global';  
+
   const collapseShow = ref("hidden");
-  const router = useRouter();
-  const teamStore = useTeamStore();
   
   // Dummy user role; in a real scenario, this should come from the store or authentication module
   const userRole = ref(TeamUserRole.MEMBER);
@@ -126,7 +123,7 @@
       {
           label: 'Organization settings',
           icon: 'pi pi-building',
-          route: '/organization',
+          route: generateTeamPath('teams/organization'),
           allowedRoles: [TeamUserRole.OWNER]
       },
       {
@@ -151,10 +148,10 @@
       return items.value.filter(item => {
           if (item.items) {
               // Filter sub-items if present
-              item.items = item.items.filter(subItem => subItem.allowedRoles.includes(userRole.value));
+              item.items = item.items.filter(subItem => checkTeamPermission(subItem.allowedRoles));
               return item.items.length > 0;
           }
-          return item.allowedRoles.includes(userRole.value);
+          return checkTeamPermission(item.allowedRoles);
       });
   });
   </script>

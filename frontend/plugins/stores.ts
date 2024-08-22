@@ -13,6 +13,5 @@ export default defineNuxtPlugin(() => {
             userStore,
             teamStore
         },
-        
     };
 });

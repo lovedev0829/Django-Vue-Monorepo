@@ -44,7 +44,8 @@
   import UserDropdownComponent from './UserDropdown.vue';
   import { useTeamStore } from '@/stores/team';
   import { TeamType } from "@/constants/team.global.ts"
-  import { generateTeamPath } from "@/constants/team.global.ts"
+  import { generateTeamPath } from "@/helper/team.global.ts"
+  const { $router } = useNuxtApp();
 
   const selectedTeam = ref(null);
   const teamStore = useTeamStore();
@@ -63,8 +64,7 @@
   
     teamStore.teams.forEach((team) => {
       const displayName = team.name;
-      const item = { label: displayName, id: team.id, router: generateTeamPath(team.id) };
-  
+      const item = { label: displayName, id: team.id };
       if (team.type === TeamType.PERSONAL) {
             personalAccount.items.push(item);
       } else {
@@ -92,7 +92,9 @@
   }, { immediate: true });
   
   const handleChangeOrg = () => {
-    teamStore.changeCurrentTeam(selectedTeam.value)
+      teamStore.changeCurrentTeam(selectedTeam.value)
+      const path = generateTeamPath("")
+      $router.push(path)
   };
   
   onMounted(() => {
