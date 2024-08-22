@@ -7,10 +7,10 @@ urlpatterns = [
     # Team URLs
     path("create", views.TeamViewSet.as_view({'post': 'create'}), name='team-create'),
     path("list", views.TeamViewSet.as_view({'get': 'list'}), name='team-list'),
-    path("retrieve/<int:pk>", views.TeamViewSet.as_view({'get': 'retrieve'}), name='team-retrieve'),
-    path("update/<int:pk>", views.TeamViewSet.as_view({'put': 'update'}), name='team-update'),
+    path("retrieve/<str:teamId>", views.TeamViewSet.retrieve, name='team-retrieve'),
+    path("update/<str:id>", views.TeamViewSet.update, name='team-update'),
     path("partial-update/<int:pk>", views.TeamViewSet.as_view({'patch': 'partial_update'}), name='team-partial-update'),
-    path("destroy/<int:pk>", views.TeamViewSet.as_view({'delete': 'destroy'}), name='team-destroy'),
+    path("destroy/<str:id>", views.TeamViewSet.destroy, name='team-destroy'),
 
     # Invitation URLs
     path("invitations/create", views.InvitationViewSet.as_view({'post': 'create'}), name='invitation-create'),

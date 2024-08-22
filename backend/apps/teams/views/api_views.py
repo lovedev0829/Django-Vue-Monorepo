@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied, ValidationError as DRFValidationError
-
+from rest_framework.decorators import api_view
 from apps.api.permissions import IsAuthenticatedOrHasUserAPIKey
 
 from ..invitations import send_invitation
@@ -12,11 +12,13 @@ from ..permissions import TeamAccessPermissions, TeamModelAccessPermissions
 from ..roles import is_admin, is_member
 from ..serializers import TeamSerializer, InvitationSerializer
 from ..constants import TenantUserRole
+from rest_framework.response import Response
+from apps.utils.hashid import encode, decode
 
 @extend_schema_view(
     create=extend_schema(operation_id="teams_create"),
     list=extend_schema(operation_id="teams_list"),
-    retrieve=extend_schema(operation_id="teams_retrieve"),
+    # retrieve=extend_schema(operation_id="teams_retrieve"),
     update=extend_schema(operation_id="teams_update"),
     partial_update=extend_schema(operation_id="teams_partial_update"),
     destroy=extend_schema(operation_id="teams_destroy"),
@@ -34,8 +36,50 @@ class TeamViewSet(viewsets.ModelViewSet):
         # ensure logged in user is set on the model during creation
         team = serializer.save()
         team.members.add(self.request.user, through_defaults={"role": TenantUserRole.OWNER})
+    
+    @api_view(['GET'])
+    def retrieve(request, teamId):
+        # Attempt to retrieve the team by its ID
+        try:
+            team = Team.objects.get(id=teamId)
+            serializer = TeamSerializer(team, context={'request': request})
+            return Response({'team': serializer.data})
+        except Team.DoesNotExist:
+            return Response({'error': 'Team not found'}, status=404)
+    
+    @api_view(['PUT'])
+    def update(request, id):
+        try:
+            # Ensure you're working with the request object provided by DRF
+            team = get_object_or_404(Team, id=id)
 
-
+            # Get the 'name' from the request data (use request.data for POST/PUT/PATCH)
+            name = request.data.get('name', None)
+            
+            if name:
+                # Update the team name and save the changes
+                team.name = name
+                team.save()
+                return Response({'message': "Team updated successfully!"})
+            else:
+                return Response({'error': 'Name not provided'}, status=400)
+        
+        except Team.DoesNotExist:
+            return Response({'error': 'Team not found'}, status=404)
+    
+    @api_view(['delete'])
+    def destroy(request, id):
+        # Attempt to retrieve the team by its ID
+        team = get_object_or_404(Team, id=id)
+        
+        # Delete the team from the database
+        team.delete()
+        
+        # Return a success response
+        return Response({'message': 'Team deleted successfully!'}, status=200)  # 204 No Content
+        
+        
+    
 @extend_schema(tags=["teams"])
 @extend_schema_view(
     create=extend_schema(operation_id="invitations_create"),
