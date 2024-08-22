@@ -1,5 +1,5 @@
 import uuid
-
+import hashid_field
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -19,7 +19,8 @@ class Team(SubscriptionModelBase, BaseModel):
     """
     A Team, with members.
     """
-
+    
+    id: str = hashid_field.HashidAutoField(primary_key=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="teams", through="Membership")

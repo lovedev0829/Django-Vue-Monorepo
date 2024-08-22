@@ -4,6 +4,7 @@ from django.db import migrations, models
 import uuid
 import django.db.models.deletion
 from django.conf import settings
+import hashid_field.field
 
 class Migration(migrations.Migration):
 
@@ -39,7 +40,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Team',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    hashid_field.field.HashidAutoField(
+                        alphabet='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+                        min_length=7,
+                        prefix='',
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),                
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(max_length=100)),

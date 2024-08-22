@@ -1,5 +1,6 @@
 // middleware/auth.global.ts
 export default defineNuxtRouteMiddleware((to, from) => {
+
     const { $userStore } = useNuxtApp();
   
     if ($userStore.isAuthenticated === false && to.path !== '/login' && to.path !== '/signup') {
@@ -7,5 +8,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     } else if ((to.path === '/login' || to.path === '/signup') && $userStore.isAuthenticated === true) {
       return navigateTo('/dashboard');
     }
-  });
-  
+});
+

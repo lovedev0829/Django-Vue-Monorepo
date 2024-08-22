@@ -15,5 +15,3 @@ export const TEAM_API_PATH = {
     retrieve: '/teams/retrieve',
     delete: '/teams/destroy',
 }
-
-

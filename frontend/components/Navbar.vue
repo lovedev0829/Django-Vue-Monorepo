@@ -3,15 +3,15 @@
     <nav class="absolute top-0 left-0 w-full z-10 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4 bg-white">
       <div class="w-full mx-auto items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
         <div class="gap-4 flex flex-row">
-            <Dropdown
-                v-model="selectedOrg"
-                :options="groupedOrgs"
-                optionLabel="label"
-                optionGroupLabel="label"
-                optionGroupChildren="items"
-                class="custom-dropdown w-64"
-                @change="handleChangeOrg"
-                optionValue="id"
+          <Dropdown
+            v-model="selectedTeam"
+            :options="groupedOrgs"
+            optionLabel="label"
+            optionGroupLabel="label"
+            optionGroupChildren="items"
+            class="custom-dropdown w-64"
+            @change="handleChangeOrg"
+            optionValue="id"
           >
             <template #optiongroup="slotProps">
               <div class="flex align-items-center">
@@ -35,19 +35,22 @@
         </ul>
       </div>
     </nav>
-  
     <!-- End Navbar -->
   </template>
   
   <script setup>
-  import { ref, onMounted, computed } from 'vue';
+
+  import { ref, onMounted, computed, watch } from 'vue';
   import UserDropdownComponent from './UserDropdown.vue';
   import { useTeamStore } from '@/stores/team';
-  
-  const selectedOrg = ref(null);
+  import { TeamType } from "@/constants/team.global.ts"
+  import { generateTeamPath } from "@/constants/team.global.ts"
+
+  const selectedTeam = ref(null);
   const teamStore = useTeamStore();
   
   const groupedOrgs = computed(() => {
+    
     const personalAccount = {
       label: 'Personal Account',
       items: [],
@@ -60,20 +63,36 @@
   
     teamStore.teams.forEach((team) => {
       const displayName = team.name;
-      const item = { label: displayName, id: team.id };
+      const item = { label: displayName, id: team.id, router: generateTeamPath(team.id) };
   
-      if (team.is_owner) {
-        personalAccount.items.push(item);
+      if (team.type === TeamType.PERSONAL) {
+            personalAccount.items.push(item);
       } else {
-        organizations.items.push(item);
+            organizations.items.push(item);
       }
     });
   
     return [personalAccount, organizations];
+
   });
   
+  // Watch groupedOrgs and set the first option as the default selection
+  watch(groupedOrgs, (newTeam) => {
+    if (!selectedTeam.value && newTeam.length > 0) {
+      // Check for personal accounts first, then organizations
+      const firstPersonalAccount = newTeam[0].items[0];
+      const firstOrganization = newTeam[1].items[0];
+      
+      if (firstPersonalAccount) {
+        selectedTeam.value = firstPersonalAccount.id;
+      } else if (firstOrganization) {
+        selectedTeam.value = firstOrganization.id;
+      }
+    }
+  }, { immediate: true });
+  
   const handleChangeOrg = () => {
-    // Handle organization change logic
+    teamStore.changeCurrentTeam(selectedTeam.value)
   };
   
   onMounted(() => {
@@ -81,10 +100,10 @@
   });
   </script>
   
-<style scoped>
-
-.custom-dropdown .p-dropdown-panel {
-  max-height: none !important; /* Remove the max-height restriction */
-  overflow: hidden !important;  /* Hide overflow to remove scrollbar */
-}
-</style>
+  <style scoped>
+  .custom-dropdown .p-dropdown-panel {
+    max-height: none !important; /* Remove max height limit */
+    overflow: hidden !important;  /* Disable scroll and hide overflow */
+  }
+  </style>
+  

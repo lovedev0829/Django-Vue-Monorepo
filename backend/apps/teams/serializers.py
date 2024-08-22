@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-
+import hashid_field
+from hashid_field import rest as hidrest
 from apps.subscriptions.serializers import SubscriptionSerializer
 from django.conf import settings
 from .helpers import get_next_unique_team_slug
@@ -30,6 +31,8 @@ class InvitationSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    
+    id = hidrest.HashidSerializerCharField(source_field="teams.Team.id", read_only=True)
     slug = serializers.SlugField(
         required=False,
         validators=[UniqueValidator(queryset=Team.objects.all())],

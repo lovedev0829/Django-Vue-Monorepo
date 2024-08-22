@@ -6,7 +6,7 @@
                 <InputText id="name" v-model="name" placeholder="Name" class="w-80" />
             </div>
             <div class="flex flex-col gap-2">
-                <Button @click="createHandle">+ Create new tenant</Button>
+                <Button @click="createHandle">+ Create new Team</Button>
             </div>
         </div>
     </div>
