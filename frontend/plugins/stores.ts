@@ -7,6 +7,7 @@ export default defineNuxtPlugin(() => {
     const teamStore = useTeamStore();
 
     userStore.initializeStore();
+    teamStore.initializeStore();
 
     return {
         provide: {

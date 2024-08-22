@@ -9,7 +9,7 @@
       <button
         class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
         type="button"
-        v-on:click="toggleCollapseShow('bg-white m-2 py-3 px-6')"
+        v-on:click="toggleCollapseShow('bg-black m-2 py-3 px-6')"
       >
         <i class="fas fa-bars"></i>
       </button>
@@ -87,9 +87,6 @@
   import { checkTeamPermission, generateTeamPath } from '~/helper/team.global';  
 
   const collapseShow = ref("hidden");
-  
-  // Dummy user role; in a real scenario, this should come from the store or authentication module
-  const userRole = ref(TeamUserRole.MEMBER);
   
   const toggleCollapseShow = function(classes) {
       collapseShow.value = classes;

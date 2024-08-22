@@ -5,7 +5,7 @@
         <div class="gap-4 flex flex-row">
           <Dropdown
             v-model="selectedTeam"
-            :options="groupedOrgs"
+            :options="groupedTeams"
             optionLabel="label"
             optionGroupLabel="label"
             optionGroupChildren="items"
@@ -50,7 +50,7 @@
   const selectedTeam = ref(null);
   const teamStore = useTeamStore();
   
-  const groupedOrgs = computed(() => {
+  const groupedTeams = computed(() => {
     
     const personalAccount = {
       label: 'Personal Account',
@@ -76,19 +76,8 @@
 
   });
   
-  // Watch groupedOrgs and set the first option as the default selection
-  watch(groupedOrgs, (newTeam) => {
-    if (!selectedTeam.value && newTeam.length > 0) {
-      // Check for personal accounts first, then organizations
-      const firstPersonalAccount = newTeam[0].items[0];
-      const firstOrganization = newTeam[1].items[0];
-      
-      if (firstPersonalAccount) {
-        selectedTeam.value = firstPersonalAccount.id;
-      } else if (firstOrganization) {
-        selectedTeam.value = firstOrganization.id;
-      }
-    }
+  watch(teamStore.selectedTeam, (currentTeam) => {
+        selectedTeam.value = currentTeam.id
   }, { immediate: true });
   
   const handleChangeOrg = () => {
