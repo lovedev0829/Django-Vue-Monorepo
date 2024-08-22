@@ -34,12 +34,16 @@
         }
 
         await teamStore.createTeam(name.value).then(res => {
+            
             toast.add({
                 severity: 'success',
                 detail: "Team created successfully!",
                 life: 3000,
-            });  
+            });
+
+            name.value=""
         })
+        
     }
 
 

@@ -120,7 +120,7 @@
       {
           label: 'Organization settings',
           icon: 'pi pi-building',
-          route: generateTeamPath('teams/organization'),
+          route: generateTeamPath('teams/member'),
           allowedRoles: [TeamUserRole.OWNER]
       },
       {

@@ -77,6 +77,7 @@
   });
   
   watch(teamStore.selectedTeam, (currentTeam) => {
+      console.log("currentTeam", currentTeam)
         selectedTeam.value = currentTeam.id
   }, { immediate: true });
   

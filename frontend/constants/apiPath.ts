@@ -13,5 +13,5 @@ export const TEAM_API_PATH = {
     create: '/teams/create',
     update: '/teams/update',
     retrieve: '/teams/retrieve',
-    delete: '/teams/destroy',
+    destroy: '/teams/destroy',
 }

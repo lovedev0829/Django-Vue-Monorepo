@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import TeamService from "../services/TeamService";
-import { CURRENT_TEAM_STORAGE_KEY } from "@/constants/team.global";
+import { CURRENT_TEAM_STORAGE_KEY, TeamType } from "@/constants/team.global";
 import { getCurrentTeamRole } from '~/helper/team.global';
 
 interface ICurrentTeam {
@@ -17,7 +17,6 @@ export const useTeamStore = defineStore('teams', {
   actions: {
     async initializeStore(): Promise<void> {
         const storedTeam = localStorage.getItem(CURRENT_TEAM_STORAGE_KEY);
-        console.log(storedTeam)
         if (storedTeam) {
           this.selectedTeam = JSON.parse(storedTeam);
         }
@@ -27,7 +26,9 @@ export const useTeamStore = defineStore('teams', {
       try {
         const response: any = await TeamService.getTeams();
         this.teams = response.results;
-        if(!this.selectedTeam) this.setTeamStorage(response.results[0]);
+        if(!this.$state.selectedTeam.id ) {
+          this.setTeamStorage(response.results[0]);
+        }
       } catch (error) {
         console.error('Failed to fetch teams', error);
       }
@@ -53,8 +54,13 @@ export const useTeamStore = defineStore('teams', {
       const teamId = currentTeam?.id;
       const teamType = currentTeam?.type;
       const teamRole = getCurrentTeamRole(currentTeam);
-      this.selectedTeam = { id: teamId, role: teamRole, type: teamType };
+      this.$state.selectedTeam  = { id: teamId, role: teamRole, type: teamType };
       localStorage.setItem(CURRENT_TEAM_STORAGE_KEY, JSON.stringify(this.selectedTeam));
+    },
+
+    resetTeamStorage(): void {
+      const defaultTeam = this.teams.find(item =>  item.type === TeamType.PERSONAL)
+      this.setTeamStorage(defaultTeam)
     },
   },
 });
